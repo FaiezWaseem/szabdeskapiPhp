@@ -1,96 +1,43 @@
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
-include_once("Http.php");
-include_once('PhpDom.php');
+include_once('Szabdesk.php');
 
 
-// Example 1
-// $http = new HTTP();
-// $html = $http->get('https://www.webscraper.io/test-sites/e-commerce/allinone/computers');
+$szab = new SzabdeskApi();
 
-// $document = new PhpDom($html);
-// $prices = $document->find('div.card-body h4.price');
-// $titles = $document->find('div.card-body h4 a.title');
-// $images = $document->find('div.card-body img.image');
-// if($prices){
-//     for( $i = 0; $i < count($titles); $i++ ){
-//         $title = $titles[$i]->nodeValue."<br>";
-//         $price = $prices[$i]->nodeValue."<br>";
-//         $image = $images[$i]->getAttribute('src');
-//         echo "
-//           <div>
-//           <img  src='https://www.webscraper.io$image' width='200' height='200'/>
-//           <h2>
-//           $title
-//           </h2>
-//           <h3>$price</h3>
-//           </div>
-//         ";
-//     }
-// }else{
-//     echo 'No Price Found';
-// }
+$env = parse_ini_file('.env');
+$szab->setUrl($env['URL']);
 
 
+if (isset($_GET['api']) && isset($_POST['cookie'])) {
 
+    $szab->setCookie($_POST['cookie']);
 
-
-// Example 2
-// $html =  file_get_contents('form.html');
-// $document = new PhpDom($html);
-// $tables = $document->find('table');
-// $trs = $document->findInElement($tables[4] , 'tr');
-// $json = [] ;
-// for ($i=0; $i < count($trs) ; $i++) { 
-//     $tr = $trs[$i];
-//     $tds = $document->findInElement($tr , 'td');
-//     $row;
-//     foreach ($tds as $td) {
-//      $row[] = $td->nodeValue;
-//     }
-//     array_push($json, $row);
-// }
-// echo json_encode($json);
-
-
-
-
-
-
-// Example3 Szabdesk
-// $html = file_get_contents('form.html');
-// $document = new PhpDom($html);
-// $tables = $document->find('#frmCourseOutline table');
-// $trs = $document->findInElement($tables[0], 'tr');
-// $data = [];
-// array_shift($trs);
-// array_shift($trs);
-// foreach ($trs as $tr) {
-//     $coursename = $document->findInElement($tr, 'td:nth-child(2)')[0]->nodeValue;
-//     $classWith = $document->findInElement($tr, 'td:nth-child(3)')[0]->nodeValue;
-//     $outlineHref = $document->findInElement($tr, 'td:nth-child(4) a')[0];
-//     $outlineHref = $outlineHref ? $outlineHref->getAttribute('href') :'';
-//     if ($outlineHref) {
-//         $jsCode = $outlineHref;
-//         $regex = "/'([^']*)'/";
-//         $values = [];
-
-//         preg_match_all($regex, $jsCode, $matches);
-
-//         foreach ($matches[1] as $match) {
-//             $values[] = $match;
-//         }
-//         $data[] = [
-//             "coursename" => $coursename,
-//             "classWith" => $classWith,
-//             "data" => [
-//                 "txtFac" => $values[1],
-//                 "txtCou" => $values[4],
-//                 "txtSem" => $values[2],
-//                 "txtSec" => $values[3]
-//             ]
-//         ];
-//     }
-// }
-
-// echo json_encode($data);
+    if(isset($_POST['url'])){
+        $szab->setUrl($_POST['url']);
+    }
+    if ($_GET['api'] == 'profile') {
+        echo json_encode($szab->getProfile());
+    }
+    if ($_GET['api'] == 'courses') {
+        echo json_encode($szab->getCourses());
+    }
+    if ($_GET['api'] == 'result') {
+        echo json_encode($szab->getResult());
+    }
+    if ($_GET['api'] == 'coursesAll') {
+        echo json_encode($szab->getAllCourseTaken());
+    }
+    if ($_GET['api'] == 'schedule') {
+        echo json_encode($szab->getCurrentWeekSchedule());
+    }
+    if ($_GET['api'] == 'attendance') {
+        $params = array(
+            "txtFac" =>  isset($_POST['txtFac']) ? $_POST['txtFac']  : '' ,
+            "txtCou" => isset($_POST['txtCou']) ? $_POST['txtCou']  : '',
+            "txtSem" => isset($_POST['txtSem']) ? $_POST['txtSem']  : '',
+            "txtSec" => isset($_POST['txtSec']) ? $_POST['txtSec']  : ''
+        );
+        echo json_encode($szab->getCourseAttendance($params));
+    }
+}

@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /SZABDESK_SCRAPPED/
+
+
+RewriteRule ^api/profile/?$ index.php?api=profile [L,QSA]
+RewriteRule ^api/courses/?$ index.php?api=courses [L,QSA]
+RewriteRule ^api/result/?$ index.php?api=result [L,QSA]
+RewriteRule ^api/coursesAll/?$ index.php?api=coursesAll [L,QSA]
+RewriteRule ^api/schedule/?$ index.php?api=schedule [L,QSA]
+RewriteRule ^api/attendance/?$ index.php?api=attendance [L,QSA]

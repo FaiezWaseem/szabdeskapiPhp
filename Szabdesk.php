@@ -225,20 +225,3 @@ class SzabdeskApi extends HTTP
      return $week;
     }
 }
-
-
-$env = parse_ini_file('.env');
-
-
-$szab = new SzabdeskApi();
-$szab->setUrl($env['URL']);
-$szab->setCookie($env['COOKIE']);
-
-// $params = array(
-//     "txtFac" => "AsimRiaz",
-//     "txtCou" => "2805",
-//     "txtSem" => "19846",
-//     "txtSec" => "2"
-// );
-
-echo json_encode($szab->getProfile());

@@ -3,7 +3,23 @@
 
 ## Test Server
 
-- not yet 
+https://api.faiezwaseem.com/szabdesk/api/
+
+## Route POST
+
+
+https://api.faiezwaseem.com/szabdesk/api/profile/
+
+https://api.faiezwaseem.com/szabdesk/api/courses/
+
+https://api.faiezwaseem.com/szabdesk/api/schedule/
+
+https://api.faiezwaseem.com/szabdesk/api/result/
+
+https://api.faiezwaseem.com/szabdesk/api/coursesAll/
+
+https://api.faiezwaseem.com/szabdesk/api/attendance/
+
 
 ### Todo
 
@@ -22,3 +38,5 @@
 - [ ] Course Recap [get course Marks]
 
 - [ ] Old Results  [get prevoiuse semester results/grades] 
+
+
