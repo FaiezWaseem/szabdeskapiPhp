@@ -192,6 +192,78 @@ class SzabdeskApi extends HTTP
         return $lectures;
 
     }
+    public function getCourseFiles($params)
+    {
+        if ($this->testing) {
+            $html = file_get_contents('home.html');
+        } else {
+            $html = $this->postWithParams($this->url . "Student/stdCoursePortfolio.asp", $params);
+        }
+        $document = new PhpDom($html);
+        $table = $document->find("table")[4];
+        $trs = $document->findInElement($table, 'tr');
+        $index = 0;
+        $lectures = [];
+        foreach ($trs as $tr) {
+            if ($index > 0) {
+                $tds = $document->findInElement($tr, 'td');
+                $lectureNumber = trim(@$tds[0]->nodeValue);
+                $lectureDate = trim(@$tds[1]->nodeValue);
+                $weekNumber = trim(@$tds[2]->nodeValue);
+                $description = trim(@$tds[3]->nodeValue);
+                $title = trim(@$tds[4]->nodeValue);
+                
+                $link =$document->findInElement($tds[4],'a')[0];
+                $link = new PhpElement($link);
+
+
+                array_push($lectures, [
+                       'No' => $lectureNumber,
+                       'Date' => $lectureDate,
+                       'week_no' => $weekNumber,
+                       'description' => $description,
+                       'title' => $title,
+                       'download_link' => $this->url .$link->attr('href')
+                    ]);
+                
+            }
+            $index++;
+        }
+        return $lectures;
+
+    }
+    public function getCourseRecap($params)
+    {
+        if ($this->testing) {
+            $html = file_get_contents('home.html');
+        } else {
+            $html = $this->postWithParams($this->url . "Student/QryCourseRecapSheet.asp", $params);
+        }
+        $document = new PhpDom($html);
+        $table = $document->find("table.textColor")[2];
+        $trs = $document->findInElement($table, 'tr');
+        $index = 0;
+        $lectures = [];
+        foreach ($trs as $tr) {
+            if ($index > 0) {
+                $tds = $document->findInElement($tr, 'td');
+                if(sizeof($tds) > 2){
+                    $head = trim(@$tds[0]->nodeValue);
+                    $total_marks = trim(@$tds[1]->nodeValue);
+                    $obt_marks = trim(@$tds[2]->nodeValue);
+
+                    array_push($lectures, [
+                        'head' => $head,
+                        'total_marks' => $total_marks,
+                        'obt_marks' => $obt_marks
+                     ]);
+                }
+            }
+            $index++;
+        }
+        return $lectures;
+
+    }
     public function getCurrentWeekSchedule(){
      if($this->testing){
         $html =  file_get_contents('home.html');

@@ -6,7 +6,7 @@ include_once('Szabdesk.php');
 $szab = new SzabdeskApi();
 
 $env = parse_ini_file('.env');
-$szab->setUrl($env['URL']);
+$szab->setUrl($env['URL'] ?? 'https://fallzabdesk.szabist.edu.pk/');
 
 
 if (isset($_GET['api']) && isset($_POST['cookie'])) {
@@ -39,5 +39,23 @@ if (isset($_GET['api']) && isset($_POST['cookie'])) {
             "txtSec" => isset($_POST['txtSec']) ? $_POST['txtSec']  : ''
         );
         echo json_encode($szab->getCourseAttendance($params));
+    }
+    if ($_GET['api'] == 'files') {
+        $params = array(
+            "txtFac" =>  isset($_POST['txtFac']) ? $_POST['txtFac']  : '' ,
+            "txtCou" => isset($_POST['txtCou']) ? $_POST['txtCou']  : '',
+            "txtSem" => isset($_POST['txtSem']) ? $_POST['txtSem']  : '',
+            "txtSec" => isset($_POST['txtSec']) ? $_POST['txtSec']  : ''
+        );
+        echo json_encode($szab->getCourseFiles($params));
+    }
+    if ($_GET['api'] == 'recap') {
+        $params = array(
+            "txtFac" =>  isset($_POST['txtFac']) ? $_POST['txtFac']  : '' ,
+            "txtCou" => isset($_POST['txtCou']) ? $_POST['txtCou']  : '',
+            "txtSem" => isset($_POST['txtSem']) ? $_POST['txtSem']  : '',
+            "txtSec" => isset($_POST['txtSec']) ? $_POST['txtSec']  : ''
+        );
+        echo json_encode($szab->getCourseRecap($params));
     }
 }
